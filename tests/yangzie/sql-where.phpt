@@ -85,6 +85,10 @@ echo $sql,"\r\n";
 $sql->clean()->from(TestItemModel::class, 'b')->where('b','id','=','2')->or_where_group([new YZE_Where('b','id','=','1'),new  YZE_Where('b','test_id','=','2','OR')])->select('b', ['id','test_id']);
 echo $sql,"\r\n";
 
+$sql->clean()->from(TestItemModel::class, 'b')->where_group([new YZE_Where('b','created_on','=','2024','or','YEAR'),new  YZE_Where('b','test_id','=','1','or')])->select('b', ['id','test_id']);
+echo $sql,"\r\n";
+
+//new YZE_Where 的field_func 只能使用参数为一个并且只是对一个值进行处理的sql函数（即直接对对应字段值进行函数效果的处理）,value_func没有作处理无效果
 ?>
 --EXPECT--
 SELECT a.id AS a_id FROM `tests` AS a WHERE a.id = '1'
@@ -98,5 +102,5 @@ SELECT b.id AS b_id,b.test_id AS b_test_id FROM `test_item` AS b WHERE ( b.id = 
 SELECT b.id AS b_id,b.test_id AS b_test_id FROM `test_item` AS b WHERE b.id = '2' AND ( b.id = '1' or b.test_id = '1')
 SELECT b.id AS b_id,b.test_id AS b_test_id FROM `test_item` AS b WHERE ( b.id = '1' AND b.test_id = '2')
 SELECT b.id AS b_id,b.test_id AS b_test_id FROM `test_item` AS b WHERE b.id = '2' OR ( b.id = '1' OR b.test_id = '2')
-
+SELECT b.id AS b_id,b.test_id AS b_test_id FROM `test_item` AS b WHERE ( YEAR( b.created_on ) = '2024' or b.test_id = '1')
 
