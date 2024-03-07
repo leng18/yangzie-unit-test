@@ -34,7 +34,11 @@ echo $sql,"\r\n";
 $sql->clean()->from(TestModel::class, 'test');
 echo $sql,"\r\n";
 
+$sql->clean()->from(TestModel::class, 'test', '_2016');
+echo $sql,"\r\n";
+
 ?>
 --EXPECT--
 SELECT m.id AS m_id,m.title AS m_title,m.created_on AS m_created_on,m.modified_on AS m_modified_on FROM `tests` AS m
 SELECT test.id AS test_id,test.title AS test_title,test.created_on AS test_created_on,test.modified_on AS test_modified_on FROM `tests` AS test
+SELECT test.id AS test_id,test.title AS test_title,test.created_on AS test_created_on,test.modified_on AS test_modified_on FROM `tests_2016` AS test
