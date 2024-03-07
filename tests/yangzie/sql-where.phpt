@@ -63,9 +63,40 @@ echo $sql,"\r\n";
 
 $sql->clean()->from(TestModel::class, 'a')->where('a','id','=','title', true)->or_where('a','id','=','2')->select('a', ['id']);
 echo $sql,"\r\n";
+
+$sql->clean()->from(TestItemModel::class, 'a')->native_Where("a.id = 1 AND a.test_id > 2")->select('a', ['id','test_id']);
+echo $sql,"\r\n";
+
+$sql->clean()->from(TestItemModel::class, 'a')->where('a','id','=','1')->native_Where(" or a.id = 2")->select('a', ['id']);
+echo $sql,"\r\n";
+
+$sql->clean()->from(TestItemModel::class, 'b')->where_group([new YZE_Where('b','id','=','1'),new  YZE_Where('b','test_id','=','1')])->select('b', ['id','test_id']);
+echo $sql,"\r\n";
+
+$sql->clean()->from(TestItemModel::class, 'b')->where_group([new YZE_Where('b','id','=','1'),new  YZE_Where('b','test_id','=','1','or')])->select('b', ['id','test_id']);
+echo $sql,"\r\n";
+
+$sql->clean()->from(TestItemModel::class, 'b')->where('b','id','=','2')->where_group([new YZE_Where('b','id','=','1','or'),new  YZE_Where('b','test_id','=','1','or')])->select('b', ['id','test_id']);
+echo $sql,"\r\n";
+
+$sql->clean()->from(TestItemModel::class, 'b')->or_where_group([new YZE_Where('b','id','=','1'),new  YZE_Where('b','test_id','=','2')])->select('b', ['id','test_id']);
+echo $sql,"\r\n";
+
+$sql->clean()->from(TestItemModel::class, 'b')->where('b','id','=','2')->or_where_group([new YZE_Where('b','id','=','1'),new  YZE_Where('b','test_id','=','2','OR')])->select('b', ['id','test_id']);
+echo $sql,"\r\n";
+
 ?>
 --EXPECT--
 SELECT a.id AS a_id FROM `tests` AS a WHERE a.id = '1'
 SELECT a.id AS a_id FROM `tests` AS a WHERE a.id = '1' AND a.id = '2'
 SELECT a.id AS a_id FROM `tests` AS a WHERE a.id = '1' OR a.id = '2'
 SELECT a.id AS a_id FROM `tests` AS a WHERE a.id = `title` OR a.id = '2'
+SELECT a.id AS a_id,a.test_id AS a_test_id FROM `test_item` AS a WHERE a.id = 1 AND a.test_id > 2
+SELECT a.id AS a_id FROM `test_item` AS a WHERE a.id = '1' or a.id = 2
+SELECT b.id AS b_id,b.test_id AS b_test_id FROM `test_item` AS b WHERE ( b.id = '1' AND b.test_id = '1')
+SELECT b.id AS b_id,b.test_id AS b_test_id FROM `test_item` AS b WHERE ( b.id = '1' or b.test_id = '1')
+SELECT b.id AS b_id,b.test_id AS b_test_id FROM `test_item` AS b WHERE b.id = '2' AND ( b.id = '1' or b.test_id = '1')
+SELECT b.id AS b_id,b.test_id AS b_test_id FROM `test_item` AS b WHERE ( b.id = '1' AND b.test_id = '2')
+SELECT b.id AS b_id,b.test_id AS b_test_id FROM `test_item` AS b WHERE b.id = '2' OR ( b.id = '1' OR b.test_id = '2')
+
+

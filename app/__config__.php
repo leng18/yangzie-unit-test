@@ -28,7 +28,8 @@ define("YZE_DEVELOP_MODE",  true );
 /**
  * 错误报告级别
  */
-ini_set('error_reporting', E_ALL & ~E_STRICT & ~E_DEPRECATED);
+//ini_set('error_reporting', E_ALL & ~E_STRICT & ~E_DEPRECATED);
+ini_set('error_reporting', E_ALL & ~E_STRICT & ~E_DEPRECATED & ~E_NOTICE);
 /**
  * 时区
  */
