@@ -69,6 +69,19 @@ echo $sql,"\r\n";
 $sql->clean()->from(TestModel::class,'t')->limit(10)->select('t',['id']);
 echo $sql,"\r\n";
 
+$sql->clean()->from(TestModel::class,'t')->group_by('t','title')->select('t',['id','title']);
+echo $sql,"\r\n";
+
+$sql->clean()->from(TestModel::class,'t')->group_by('t','title',true)->select('t',['id','title']);
+echo $sql,"\r\n";
+
+
+$sql->clean()->from(TestModel::class,'t')->order_by('t','id','desc')->select('t',['id','title']);
+echo $sql,"\r\n";
+
+$sql->clean()->from(TestModel::class,'t')->order_by('t','id','asc',true)->select('t',['id','title']);
+echo $sql,"\r\n";
+
 ?>
 --EXPECT--
 SELECT m.id AS m_id,m.title AS m_title,m.created_on AS m_created_on,m.modified_on AS m_modified_on FROM `tests` AS m
@@ -85,3 +98,7 @@ SELECT sum(t.id) AS t_sum_id FROM `tests` AS t
 SELECT t.id AS t_id FROM `tests` AS t LIMIT 0 , 10
 SELECT t.id AS t_id FROM `tests` AS t
 SELECT t.id AS t_id FROM `tests` AS t LIMIT 10
+SELECT t.id AS t_id,t.title AS t_title FROM `tests` AS t GROUP BY t.title
+SELECT t.id AS t_id,t.title AS t_title FROM `tests` AS t GROUP BY t_title
+SELECT t.id AS t_id,t.title AS t_title FROM `tests` AS t ORDER BY t.id DESC
+SELECT t.id AS t_id,t.title AS t_title FROM `tests` AS t ORDER BY t_id ASC
