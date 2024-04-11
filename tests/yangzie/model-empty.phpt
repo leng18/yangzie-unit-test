@@ -27,10 +27,14 @@ class TestModel extends YZE_Model{
 }
 
 $query = TestModel::from();
-
 $sql = $query->get_sql();
 echo $sql,"-\r\n";
 
+$query = TestModel::from('t');
+$sql = $query->get_sql();
+echo $sql,"\r\n";
+
 ?>
 --EXPECT--
-SELECT * FROM -
+SELECT m.id AS m_id,m.title AS m_title,m.created_on AS m_created_on,m.modified_on AS m_modified_on FROM `tests` AS m-
+SELECT t.id AS t_id,t.title AS t_title,t.created_on AS t_created_on,t.modified_on AS t_modified_on FROM `tests` AS t
