@@ -135,6 +135,11 @@ $query->where("id > 0 or title is not null")->order_By('id','asc','t')->group_By
 $sql = $query->get_sql();
 echo $sql,"\r\n";
 
+$query->clean()->find_all();
+$sql = $query->get_sql();
+echo $sql,"\r\n";
+
+
 ?>
 --EXPECT--
 SELECT m.id AS m_id,m.title AS m_title,m.created_on AS m_created_on,m.modified_on AS m_modified_on FROM `tests` AS m
@@ -154,3 +159,4 @@ SELECT t.id AS t_id,t.title AS t_title,t.created_on AS t_created_on,t.modified_o
 SELECT t.id AS t_id,t.title AS t_title,t.created_on AS t_created_on,t.modified_on AS t_modified_on FROM `tests` AS t GROUP BY t.title
 SELECT t.id AS t_id,t.title AS t_title,t.created_on AS t_created_on,t.modified_on AS t_modified_on FROM `tests` AS t ORDER BY t.id DESC
 SELECT t.id AS t_id,t.title AS t_title,t.created_on AS t_created_on,t.modified_on AS t_modified_on FROM `tests` AS t WHERE id > 0 or title is not null GROUP BY t.id ORDER BY t.id ASC LIMIT 0 , 10
+SELECT * FROM
